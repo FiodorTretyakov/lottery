@@ -3,5 +3,9 @@
         "Fiodor",
         "Hsts",
         "Tretyakov"
-    ]
+    ],
+    "files.exclude" : {
+        "**/bin": true,
+        "**/obj": true
+    }    
 }
