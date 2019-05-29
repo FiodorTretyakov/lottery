@@ -29,7 +29,7 @@ namespace lottery
         {
             services.AddMvc();
             services.AddDbContext<TicketContext>
-                (options => options.UseSqlServer("Data Source=lottery.db"));
+                (options => options.UseSqlServer(Configuration.GetConnectionString("LotteryDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,5 +9,6 @@ namespace lottery.db
         { }
 
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Line> Lines { get; set; }
     }
 }

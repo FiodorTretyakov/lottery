@@ -9,6 +9,6 @@ namespace lottery.db
         public int Id { get; set; }
 
         [Required]
-        public List<Line> Lines { get; set; }
+        public ICollection<Line> Lines { get; set; }
     }
 }
