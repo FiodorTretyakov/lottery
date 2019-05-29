@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace lottery.db
@@ -6,7 +7,8 @@ namespace lottery.db
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
-        public string Data { get; set; }
+        public List<Line> Lines { get; set; }
     }
 }
