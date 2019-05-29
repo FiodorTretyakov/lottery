@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Options;
 
 namespace lottery
@@ -22,14 +23,19 @@ namespace lottery
             Configuration = configuration;
         }
 
+        [Obsolete]
+        public static readonly LoggerFactory MyLoggerFactory
+            = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        [Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
             services.AddDbContext<TicketContext>
-                (options => options.UseSqlServer(Configuration.GetConnectionString("LotteryDatabase")));
+                (options => options.UseLoggerFactory(MyLoggerFactory).UseSqlServer(Configuration.GetConnectionString("LotteryDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
