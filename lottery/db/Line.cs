@@ -19,6 +19,9 @@ namespace lottery.db
 
         public int[] Numbers { get; private set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Inserted { get; set; }
+
         public Line(int[] numbers)
         {
             if (numbers.Length != Size)
