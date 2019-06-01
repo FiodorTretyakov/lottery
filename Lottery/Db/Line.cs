@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -13,7 +14,8 @@ namespace Lottery.Db
         [NotMapped]
         private readonly int[] allowed = { 0, 1, 2 };
 
-        public IList<int> Numbers { get; private set; }
+        [Required]
+        public IList<int> Numbers { get; }
 
         public int TicketId { get; set; }
 
@@ -49,11 +51,11 @@ namespace Lottery.Db
             }
         }
 
-        public Line(int[] numbers)
+        public Line(IList<int> numbers)
         {
-            if (numbers.Length != Size)
+            if (numbers.Count != Size)
             {
-                throw new ArgumentOutOfRangeException($"Line length should be {Size}, but {numbers.Length}");
+                throw new ArgumentOutOfRangeException($"Line length should be {Size}, but {numbers.Count}");
             }
 
             if (numbers.Any(n => !allowed.Any(a => a == n)))

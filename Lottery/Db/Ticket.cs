@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Lottery.Db
 {
@@ -19,14 +20,14 @@ namespace Lottery.Db
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Updated { get; set; }
 
-        public Ticket(ICollection<Line> lines)
+        public Ticket(ICollection<IList<int>> lines)
         {
             if (lines?.Count == 0)
             {
                 throw new ArgumentOutOfRangeException($"Ticket should have at least 1 line");
             }
 
-            Lines = lines;
+            Lines = lines.Select(line => new Line(line)).ToList();
         }
     }
 }
