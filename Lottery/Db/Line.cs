@@ -70,5 +70,6 @@ namespace Lottery.Db
 
             Result = GetResult(numbers);
             Data = JsonConvert.SerializeObject(numbers);
+        }
     }
 }
