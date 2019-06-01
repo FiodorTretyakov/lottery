@@ -18,6 +18,9 @@ namespace Lottery.Db
         [Required]
         public string Data { get; }
 
+        [Key]
+        public int Id { get; set; }
+
         public int TicketId { get; set; }
 
         [ForeignKey("TicketId")]
