@@ -8,15 +8,17 @@ using Lottery.Db;
 
 namespace Lottery.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("ticket")]
     [ApiController]
     public class TicketController : ControllerBase
     {
-        // GET api/values
         [HttpGet]
-        public static ActionResult<IEnumerable<string>> Get()
+        public static ActionResult<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            using (var context = new TicketContext())
+            {
+                return JsonConvert.SerializeObject(context.Tickets.ToList());
+            }
         }
 
         // GET api/values/5
@@ -26,19 +28,20 @@ namespace Lottery.Controllers
             return "value";
         }
 
-        private ICollection<IList<int>> GetLines(string data) =>
-            JsonConvert.DeserializeObject<IList<int>>(data);
+        private static ICollection<IList<int>> GetLines(string data) =>
+            JsonConvert.DeserializeObject<ICollection<IList<int>>>(data);
 
         [HttpPost]
-        public static void Post([FromBody] string value)
+        public static async Task Post([FromBody] string value)
         {
             using (var context = new TicketContext())
             {
-                using (var transaction = context.Database.BeginTransaction())
+                using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
                 {
                     var ticket = new Ticket(GetLines(value));
-                    context.Tickets.Add(ticket);
-                    context.SaveChanges();
+                    await context.Tickets.AddAsync(ticket).ConfigureAwait(false);
+                    await context.Lines.AddRangeAsync(ticket.Lines).ConfigureAwait(false);
+                    await context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
                 }
             }

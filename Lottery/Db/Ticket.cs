@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Lottery.Db
 {
@@ -15,9 +16,11 @@ namespace Lottery.Db
         public ICollection<Line> Lines { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [IgnoreDataMemberAttribute]
         public DateTime Inserted { get; set; } = DateTime.UtcNow;
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [IgnoreDataMemberAttribute]
         public DateTime Updated { get; set; }
 
         private Ticket()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace Lottery.Db
@@ -10,29 +11,37 @@ namespace Lottery.Db
     public class Line
     {
         [NotMapped]
+        [IgnoreDataMemberAttribute]
         public const int Size = 3;
 
         [NotMapped]
+        [IgnoreDataMemberAttribute]
         private readonly int[] allowed = { 0, 1, 2 };
 
         [Required]
         public string Data { get; }
 
         [Key]
+        [IgnoreDataMemberAttribute]
         public int Id { get; set; }
 
+        [IgnoreDataMemberAttribute]
         public int TicketId { get; set; }
 
         [ForeignKey("TicketId")]
+        [IgnoreDataMemberAttribute]
         public Ticket ParentTicket { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [IgnoreDataMemberAttribute]
         public DateTime Inserted { get; set; } = DateTime.UtcNow;
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [IgnoreDataMemberAttribute]
         public DateTime Updated { get; set; }
 
         [Required]
+        [IgnoreDataMemberAttribute]
         public int Result { get; }
 
         private Line()
