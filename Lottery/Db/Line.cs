@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Lottery.Db
 {
@@ -15,7 +16,7 @@ namespace Lottery.Db
         private readonly int[] allowed = { 0, 1, 2 };
 
         [Required]
-        public IList<int> Numbers { get; }
+        public string Data { get; }
 
         public int TicketId { get; set; }
 
@@ -28,27 +29,31 @@ namespace Lottery.Db
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Updated { get; set; }
 
-        public int Result
+        [Required]
+        public int Result { get; }
+
+        private Line()
         {
-            get
+        }
+
+        private int GetResult(IList<int> numbers)
+        {
+            if (numbers.Sum() == 2)
             {
-                if (Numbers.Sum() == 2)
-                {
-                    return 10;
-                }
-
-                if (Numbers.All(n => n == Numbers.First()))
-                {
-                    return 5;
-                }
-
-                if (Numbers[1] != Numbers.First() && Numbers[2] != Numbers.First())
-                {
-                    return 1;
-                }
-
-                return 0;
+                return 10;
             }
+
+            if (numbers.All(n => n == numbers.First()))
+            {
+                return 5;
+            }
+
+            if (numbers[1] != numbers.First() && numbers[2] != numbers.First())
+            {
+                return 1;
+            }
+
+            return 0;
         }
 
         public Line(IList<int> numbers)
@@ -63,7 +68,7 @@ namespace Lottery.Db
                 throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(",", allowed)}, but {string.Join(",", numbers)}");
             }
 
-            Numbers = numbers;
-        }
+            Result = GetResult(numbers);
+            Data = JsonConvert.SerializeObject(numbers);
     }
 }

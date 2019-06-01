@@ -12,7 +12,7 @@ namespace Lottery.Db
         public int Id { get; set; }
 
         [Required]
-        public ICollection<Line> Lines { get; }
+        public ICollection<Line> Lines { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Inserted { get; set; } = DateTime.UtcNow;
@@ -20,6 +20,9 @@ namespace Lottery.Db
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Updated { get; set; }
 
+        private Ticket()
+        { 
+        }
         public Ticket(ICollection<IList<int>> lines)
         {
             if (lines?.Count == 0)
