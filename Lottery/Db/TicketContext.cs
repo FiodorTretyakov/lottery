@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace lottery.db
+namespace Lottery.Db
 {
     public class TicketContext : DbContext
     {
