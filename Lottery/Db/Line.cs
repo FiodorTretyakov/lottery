@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -12,17 +11,14 @@ namespace Lottery.Db
         public const int Size = 3;
 
         [NotMapped]
-        public const int[] Allowed = [0, 1, 2];
+        private readonly int[] allowed = { 0, 1, 2 };
 
-        private int ticketId;
+        public IList<int> Numbers { get; private set; }
 
-        [Key]
-        public int Id { get; set; }
+        public int TicketId { get; set; }
 
         [ForeignKey("ticketId")]
         public Ticket ParentTicket { get; set; }
-
-        public ICollection<int> Numbers { get; private set; }
 
         public int Result
         {
@@ -57,9 +53,9 @@ namespace Lottery.Db
                 throw new ArgumentOutOfRangeException($"Line length should be {Size}, but {numbers.Length}");
             }
 
-            if (numbers.Any(n => !Allowed.Any(a => a == n)))
+            if (numbers.Any(n => !allowed.Any(a => a == n)))
             {
-                  throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(","Allowed)}, but {string.Join(",", numbers)}");              
+                throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(",", allowed)}, but {string.Join(",", numbers)}");
             }
 
             Numbers = numbers;
