@@ -14,7 +14,10 @@ namespace Lottery.Db
         public ICollection<Line> Lines { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Inserted { get; set; }
+        public DateTime Inserted { get; set; } = DateTime.UtcNow;
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime Updated { get; set; }
 
         public Ticket(ICollection<Line> lines)
         {
@@ -22,6 +25,8 @@ namespace Lottery.Db
             {
                 throw new ArgumentOutOfRangeException($"Ticket should have at least 1 line");
             }
+
+            Lines = lines;
         }
     }
 }

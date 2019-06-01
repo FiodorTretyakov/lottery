@@ -17,8 +17,14 @@ namespace Lottery.Db
 
         public int TicketId { get; set; }
 
-        [ForeignKey("ticketId")]
+        [ForeignKey("TicketId")]
         public Ticket ParentTicket { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Inserted { get; set; } = DateTime.UtcNow;
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime Updated { get; set; }
 
         public int Result
         {
@@ -42,9 +48,6 @@ namespace Lottery.Db
                 return 0;
             }
         }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Inserted { get; set; }
 
         public Line(int[] numbers)
         {
