@@ -12,6 +12,9 @@ namespace Lottery.Controllers
     [ApiController]
     public class TicketController : ControllerBase
     {
+        private static ICollection<IList<int>> GetLines(string data) =>
+            JsonConvert.DeserializeObject<ICollection<IList<int>>>(data);
+
         [HttpGet]
         public static ActionResult<string> Get()
         {
@@ -21,18 +24,17 @@ namespace Lottery.Controllers
             }
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public static ActionResult<string> Get(int id)
+        [HttpGet("/{id}")]
+        public static async Task<ActionResult<string>> Get(int id)
         {
-            return "value";
+            using (var context = new TicketContext())
+            {
+                return JsonConvert.SerializeObject(await context.Tickets.FindAsync(id).ConfigureAwait(false));
+            }
         }
 
-        private static ICollection<IList<int>> GetLines(string data) =>
-            JsonConvert.DeserializeObject<ICollection<IList<int>>>(data);
-
         [HttpPost]
-        public static async Task Post([FromBody] string value)
+        public static async Task<int> Post([FromBody] string value)
         {
             using (var context = new TicketContext())
             {
@@ -43,20 +45,23 @@ namespace Lottery.Controllers
                     await context.Lines.AddRangeAsync(ticket.Lines).ConfigureAwait(false);
                     await context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
+
+                    return ticket.Id;
                 }
             }
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public static void Put(int id, [FromBody] string value)
+        [HttpPut("/{id}")]
+        public static async Task Put(int id, [FromBody] string value)
         {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public static void Delete(int id)
-        {
+            using (var context = new TicketContext())
+            {
+                using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
+                {
+                    var lines = GetLines(value);
+                    transaction.Commit();
+                }
+            }
         }
     }
 }
