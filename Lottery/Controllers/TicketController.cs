@@ -59,6 +59,12 @@ namespace Lottery.Controllers
                 using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
                 {
                     var lines = GetLines(value);
+                    context.Lines.RemoveRange(context.Lines.Where(line => line.TicketId == id));
+
+                    var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
+                    ticket.SetLines(lines);
+                    await context.Lines.AddRangeAsync(ticket.Lines).ConfigureAwait(false);
+
                     transaction.Commit();
                 }
             }

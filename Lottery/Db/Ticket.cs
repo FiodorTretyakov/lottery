@@ -13,7 +13,9 @@ namespace Lottery.Db
         public int Id { get; set; }
 
         [Required]
-        public ICollection<Line> Lines { get; set; }
+        public ICollection<Line> Lines { get; private set; }
+
+        public bool Checked { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [IgnoreDataMemberAttribute]
@@ -28,6 +30,16 @@ namespace Lottery.Db
         }
         public Ticket(ICollection<IList<int>> lines)
         {
+            SetLines(lines);
+        }
+
+        public void SetLines(ICollection<IList<int>> lines)
+        {
+            if (Checked)
+            {
+                throw new FieldAccessException($"Ticket is checked now and can't be updated");
+            }
+
             if (lines?.Count == 0)
             {
                 throw new ArgumentOutOfRangeException($"Ticket should have at least 1 line");
