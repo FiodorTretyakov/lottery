@@ -11,7 +11,7 @@ namespace Lottery.Db
         public int Id { get; set; }
 
         [Required]
-        public ICollection<Line> Lines { get; set; }
+        public ICollection<Line> Lines { get; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Inserted { get; set; } = DateTime.UtcNow;
