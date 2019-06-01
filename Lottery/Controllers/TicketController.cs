@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Lottery.Db;
 
 namespace Lottery.Controllers
 {
@@ -24,10 +26,22 @@ namespace Lottery.Controllers
             return "value";
         }
 
-        // POST api/values
+        private ICollection<IList<int>> GetLines(string data) =>
+            JsonConvert.DeserializeObject<IList<int>>(data);
+
         [HttpPost]
         public static void Post([FromBody] string value)
         {
+            using (var context = new TicketContext())
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    var ticket = new Ticket(GetLines(value));
+                    context.Tickets.Add(ticket);
+                    context.SaveChanges();
+                    transaction.Commit();
+                }
+            }
         }
 
         // PUT api/values/5

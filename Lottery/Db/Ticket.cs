@@ -21,7 +21,7 @@ namespace Lottery.Db
         public DateTime Updated { get; set; }
 
         private Ticket()
-        { 
+        {
         }
         public Ticket(ICollection<IList<int>> lines)
         {
