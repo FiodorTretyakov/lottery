@@ -23,14 +23,14 @@ namespace Lottery
             Configuration = configuration;
         }
 
-        [Obsolete]
+        [Obsolete("Until .net core 3")]
         public static readonly LoggerFactory MyLoggerFactory
             = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        [Obsolete]
+        [Obsolete("Until .net core 3")]
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -39,7 +39,7 @@ namespace Lottery
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,12 +13,12 @@ namespace Lottery.Db
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("TicketId")]
+        [ForeignKey("ticketId")]
         public Ticket ParentTicket { get; set; }
 
-        public int TicketId;
+        private int ticketId;
 
-        public int[] Numbers { get; private set; }
+        public ICollection<int> Numbers { get; private set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Inserted { get; set; }
