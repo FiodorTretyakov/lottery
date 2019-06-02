@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/lottery/bin/Debug/netcoreapp2.2/lottery.dll",
+            "program": "${workspaceFolder}/lottery/bin/Debug/lottery.dll",
             "args": [],
             "cwd": "${workspaceFolder}/lottery",
             "stopAtEntry": false,
