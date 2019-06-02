@@ -13,8 +13,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.2"/>
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0"/>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\Lottery\Lottery.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lottery\Lottery.csproj"/>
+    <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

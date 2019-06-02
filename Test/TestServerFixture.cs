@@ -1,8 +1,9 @@
 using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Lottery;
-using System.Net.Http;
 
 namespace Test
 {
@@ -14,7 +15,10 @@ namespace Test
         public TestServerFixture()
         {
             testServer = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Development").UseStartup<Startup>());
+                .UseEnvironment("Development").UseStartup<Startup>()
+                .UseConfiguration(new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build()));
             Client = testServer.CreateClient();
         }
 
