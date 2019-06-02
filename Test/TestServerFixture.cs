@@ -6,7 +6,7 @@ using System.Net.Http;
 
 namespace Test
 {
-    public class TestServerFixture : IDisposable
+    public sealed class TestServerFixture : IDisposable
     {
         private readonly TestServer testServer;
         public HttpClient Client { get; }
