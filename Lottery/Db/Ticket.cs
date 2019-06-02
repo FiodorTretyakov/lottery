@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Lottery.Db
 {
@@ -77,5 +78,13 @@ namespace Lottery.Db
         {
             Lines = linesData;
         }
+
+        public Ticket(string data) : this(DeserializeLines(data))
+        {
+        }
+
+        public static ICollection<Line> DeserializeLines(string data) =>
+            JsonConvert.DeserializeObject<ICollection<IList<int>>>(data).Select(lineData =>
+            new Line(lineData)).ToArray();
     }
 }
