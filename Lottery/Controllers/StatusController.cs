@@ -14,6 +14,7 @@ namespace Lottery.Controllers
             using (var context = new TicketContext())
             {
                 var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
+                ticket.IsChecked = true;
                 await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
