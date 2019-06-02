@@ -12,10 +12,7 @@ namespace Lottery
 {
     public static class Program
     {
-        public static async Task Main()
-        {
-            await WebHost.CreateDefaultBuilder().UseStartup<Startup>().Build()
-                .RunAsync().ConfigureAwait(false);
-        } 
+        public static async Task Main() => await WebHost.CreateDefaultBuilder()
+            .UseStartup<Startup>().Build().RunAsync().ConfigureAwait(false);
     }
 }
