@@ -12,10 +12,6 @@ namespace Lottery.Db
     {
         [NotMapped]
         [IgnoreDataMemberAttribute]
-        public const int Size = 3;
-
-        [NotMapped]
-        [IgnoreDataMemberAttribute]
         private readonly int[] allowed = { 0, 1, 2 };
 
         [Required]
@@ -23,11 +19,15 @@ namespace Lottery.Db
         private string data;
 
         [NotMapped]
+        [IgnoreDataMemberAttribute]
+        private readonly int[] numbers = new int[3];
+
+        [NotMapped]
         public IList<int> Numbers
         {
             get
             {
-                return JsonConvert.DeserializeObject<IList<int>>(data);
+                return JsonConvert.DeserializeObject<int[]>(data);
             }
             set
             {
@@ -47,7 +47,7 @@ namespace Lottery.Db
 
         [Key]
         [IgnoreDataMemberAttribute]
-        public int Id { get; set; }
+        public int Id { get; }
 
         [IgnoreDataMemberAttribute]
         public int TicketId { get; set; }
@@ -58,7 +58,7 @@ namespace Lottery.Db
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [IgnoreDataMemberAttribute]
-        public DateTime Inserted { get; set; } = DateTime.UtcNow;
+        public DateTime Inserted { get; } = DateTime.UtcNow;
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [IgnoreDataMemberAttribute]

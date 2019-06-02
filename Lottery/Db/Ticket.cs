@@ -12,7 +12,7 @@ namespace Lottery.Db
     public class Ticket
     {
         [Key]
-        public int Id { get; set; }
+        public int Id { get; }
 
         [Required]
         private readonly IList<Line> lines = new List<Line>();
@@ -52,7 +52,7 @@ namespace Lottery.Db
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [IgnoreDataMemberAttribute]
-        public DateTime Inserted { get; set; } = DateTime.UtcNow;
+        public DateTime Inserted { get; } = DateTime.UtcNow;
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [IgnoreDataMemberAttribute]
