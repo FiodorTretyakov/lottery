@@ -13,7 +13,7 @@ namespace Lottery.Controllers
     public class TicketController : ControllerBase
     {
         [HttpGet]
-        public static ActionResult<string> Get()
+        public ActionResult<string> Get()
         {
             using (var context = new TicketContext())
             {
@@ -22,7 +22,7 @@ namespace Lottery.Controllers
         }
 
         [HttpGet("/{id}")]
-        public static async Task<ActionResult<string>> Get(int id)
+        public async Task<ActionResult<string>> Get(int id)
         {
             using (var context = new TicketContext())
             {
@@ -31,7 +31,7 @@ namespace Lottery.Controllers
         }
 
         [HttpPost]
-        public static async Task<int> Post([FromBody] string value)
+        public async Task<int> Post([FromBody] string value)
         {
             using (var context = new TicketContext())
             {
@@ -48,7 +48,7 @@ namespace Lottery.Controllers
         }
 
         [HttpPut("/{id}")]
-        public static async Task Put(int id, [FromBody] string value)
+        public async Task Put(int id, [FromBody] string value)
         {
             using (var context = new TicketContext())
             {

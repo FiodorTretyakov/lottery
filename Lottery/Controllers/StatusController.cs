@@ -9,7 +9,7 @@ namespace Lottery.Controllers
     public class StatusController : ControllerBase
     {
         [HttpPut("/{id}")]
-        public static async Task Put(int id)
+        public async Task Put(int id)
         {
             using (var context = new TicketContext())
             {
