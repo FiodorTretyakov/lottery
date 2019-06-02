@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,29 +15,15 @@ namespace Lottery.Db
         public int Id { get; set; }
 
         [Required]
-        [IgnoreDataMemberAttribute]
-        private ICollection<Line> lines;
+        private readonly IList<Line> lines = new List<Line>();
 
         [NotMapped]
+        [IgnoreDataMemberAttribute]
         public ICollection<Line> Lines
         {
             get
             {
-                return lines;
-            }
-            set
-            {
-                if (IsChecked)
-                {
-                    throw new FieldAccessException($"Ticket is checked now and can't be updated.");
-                }
-
-                if (value?.Count == 0)
-                {
-                    throw new ArgumentOutOfRangeException($"Ticket should have at least 1 line");
-                }
-
-                lines = value;
+                return IsChecked ? new ReadOnlyCollection<Line>(lines) : lines;
             }
         }
 
@@ -74,17 +61,17 @@ namespace Lottery.Db
         private Ticket()
         {
         }
-        public Ticket(ICollection<Line> linesData)
+        public Ticket(IList<Line> linesData)
         {
-            Lines = linesData;
+            lines = linesData;
         }
 
         public Ticket(string data) : this(DeserializeLines(data))
         {
         }
 
-        public static ICollection<Line> DeserializeLines(string data) =>
+        public static IList<Line> DeserializeLines(string data) =>
             JsonConvert.DeserializeObject<ICollection<IList<int>>>(data).Select(lineData =>
-            new Line(lineData)).ToArray();
+            new Line(lineData)).ToList();
     }
 }
