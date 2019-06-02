@@ -35,7 +35,9 @@ namespace Lottery
         {
             services.AddMvc();
             services.AddDbContext<TicketContext>
-                (options => options.UseLoggerFactory(MyLoggerFactory).UseSqlServer(Configuration.GetConnectionString("LotteryDatabase")));
+                (options => options.UseLoggerFactory(MyLoggerFactory)
+                    .UseSqlServer(Configuration.GetConnectionString("LotteryDatabase"),
+                    providerOptions => providerOptions.EnableRetryOnFailure()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
