@@ -3,6 +3,8 @@
         "Fiodor",
         "Hsts",
         "Tretyakov",
+        "localdb",
+        "mssqllocaldb",
         "nums"
     ],
     "files.exclude" : {
