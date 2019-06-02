@@ -24,11 +24,11 @@ namespace Lottery.Db
 
         [NotMapped]
         [JsonProperty("numbers")]
-        public int[] Numbers
+        public IList<int> Numbers
         {
             get
             {
-                return JsonConvert.DeserializeObject<int[]>(numbers);
+                return JsonConvert.DeserializeObject<IList<int>>(numbers);
             }
         }
 
