@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Lottery.Models;
 
 namespace Lottery.Controllers
@@ -20,11 +19,11 @@ namespace Lottery.Controllers
         }
 
         [HttpGet]
-        public ActionResult<string> Get() => JsonConvert.SerializeObject(context.Tickets.ToList());
+        public ActionResult<IEnumerable<Ticket>> Get() => context.Tickets.ToList();
 
         [HttpGet("/{id}")]
-        public async Task<ActionResult<string>> Get(int id) =>
-            JsonConvert.SerializeObject(await context.Tickets.FindAsync(id).ConfigureAwait(false));
+        public async Task<ActionResult<Ticket>> Get(int id) =>
+            await context.Tickets.FindAsync(id).ConfigureAwait(false);
 
         [HttpPost]
         public async Task<int> Post([FromBody] string value)
