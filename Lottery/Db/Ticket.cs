@@ -13,9 +13,54 @@ namespace Lottery.Db
         public int Id { get; set; }
 
         [Required]
-        public ICollection<Line> Lines { get; private set; }
+        [IgnoreDataMemberAttribute]
+        private ICollection<Line> lines;
 
-        public bool Checked { get; set; }
+        [NotMapped]
+        public ICollection<Line> Lines
+        {
+            get
+            {
+                return lines;
+            }
+            set
+            {
+                if (IsChecked)
+                {
+                    throw new FieldAccessException($"Ticket is checked now and can't be updated.");
+                }
+
+                if (value?.Count == 0)
+                {
+                    throw new ArgumentOutOfRangeException($"Ticket should have at least 1 line");
+                }
+
+                lines = value;
+            }
+        }
+
+        [IgnoreDataMemberAttribute]
+        private bool isChecked;
+
+        [NotMapped]
+        public bool IsChecked
+        {
+            get
+            {
+                return isChecked;
+            }
+            set
+            {
+                if (value)
+                {
+                    isChecked = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Ticket that checked, can't be unchecked again.");
+                }
+            }
+        }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [IgnoreDataMemberAttribute]
@@ -28,24 +73,9 @@ namespace Lottery.Db
         private Ticket()
         {
         }
-        public Ticket(ICollection<IList<int>> lines)
+        public Ticket(ICollection<Line> linesData)
         {
-            SetLines(lines);
-        }
-
-        public void SetLines(ICollection<IList<int>> lines)
-        {
-            if (Checked)
-            {
-                throw new FieldAccessException($"Ticket is checked now and can't be updated");
-            }
-
-            if (lines?.Count == 0)
-            {
-                throw new ArgumentOutOfRangeException($"Ticket should have at least 1 line");
-            }
-
-            Lines = lines.Select(line => new Line(line)).ToList();
+            Lines = linesData;
         }
     }
 }

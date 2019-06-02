@@ -12,8 +12,9 @@ namespace Lottery.Controllers
     [ApiController]
     public class TicketController : ControllerBase
     {
-        private static ICollection<IList<int>> GetLines(string data) =>
-            JsonConvert.DeserializeObject<ICollection<IList<int>>>(data);
+        private static ICollection<Line> GetLines(string data) =>
+            JsonConvert.DeserializeObject<ICollection<IList<int>>>(data).Select(lineData =>
+            new Line(lineData)).ToArray();
 
         [HttpGet]
         public static ActionResult<string> Get()
@@ -61,8 +62,8 @@ namespace Lottery.Controllers
                     context.Lines.RemoveRange(context.Lines.Where(line => line.TicketId == id));
 
                     var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
-                    ticket.SetLines(lines);
-                    
+                    ticket.Lines = lines;
+
                     await context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
                 }
