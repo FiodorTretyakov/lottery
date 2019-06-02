@@ -1,8 +1,12 @@
 using System;
 using System.Net.Http;
+using Lottery;
+using Lottery.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Test
 {
@@ -14,7 +18,17 @@ namespace Test
         public TestServerFixture()
         {
             testServer = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Development").UseStartup<TestStartup>());
+                .UseEnvironment("Development").UseStartup<Startup>()
+                .ConfigureServices(services =>
+                {
+                    services.AddDbContext<TicketContext>(options =>
+                                {
+                                    options.UseInMemoryDatabase("InMemoryDbForTesting");
+                                    options.UseInternalServiceProvider(new ServiceCollection()
+                                        .AddEntityFrameworkInMemoryDatabase()
+                                        .BuildServiceProvider());
+                                });
+                }));
             Client = testServer.CreateClient();
         }
 

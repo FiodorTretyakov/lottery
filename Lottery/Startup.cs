@@ -30,7 +30,7 @@ namespace Lottery
         public IConfiguration Configuration { get; }
 
         [Obsolete("Until .net core 3")]
-        public virtual void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
             services.AddDbContext<TicketContext>
