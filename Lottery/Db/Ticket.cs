@@ -12,6 +12,7 @@ namespace Lottery.Db
     public class Ticket
     {
         [Key]
+        [JsonProperty("id")]
         public int Id { get; }
 
         [Required]
@@ -27,10 +28,10 @@ namespace Lottery.Db
             }
         }
 
-        [IgnoreDataMemberAttribute]
         private bool isChecked;
 
         [NotMapped]
+        [IgnoreDataMemberAttribute]
         public bool IsChecked
         {
             get

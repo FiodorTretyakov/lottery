@@ -55,7 +55,8 @@ namespace Lottery.Controllers
                 using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
                 {
                     var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
-                    ticket.Lines = Ticket.DeserializeLines(value);
+                    ticket.Lines.ToList().RemoveAll(line => true);
+                    ticket.Lines.ToList().AddRange(Ticket.DeserializeLines(value));
 
                     await context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
