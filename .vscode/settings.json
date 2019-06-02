@@ -8,7 +8,6 @@
     "files.exclude" : {
         "**/bin": true,
         "**/obj": true,
-        ".vscode/solution-explorer": true,
-        "**/Migrations": true
+        ".vscode/solution-explorer": true
     }    
 }

@@ -13,7 +13,7 @@ namespace Lottery.Db
     {
         [Key]
         [JsonProperty("id")]
-        public int Id { get; }
+        public int Id { get; set; }
 
         [Required]
         private readonly IList<Line> lines = new List<Line>();

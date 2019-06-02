@@ -18,6 +18,10 @@ namespace Lottery.Db
         [IgnoreDataMemberAttribute]
         private readonly int[] allowed = { 0, 1, 2 };
 
+        [Key]
+        [IgnoreDataMemberAttribute]
+        public int id { get; set; }
+
         [Required]
         [IgnoreDataMemberAttribute]
         private string numbers;
@@ -31,10 +35,6 @@ namespace Lottery.Db
                 return JsonConvert.DeserializeObject<IList<int>>(numbers);
             }
         }
-
-        [Key]
-        [IgnoreDataMemberAttribute]
-        public int Id { get; }
 
         [IgnoreDataMemberAttribute]
         public int TicketId { get; set; }
