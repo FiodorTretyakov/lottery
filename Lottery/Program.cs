@@ -14,7 +14,7 @@ namespace Lottery
     {
         public static async Task Main()
         {
-            await new WebHostBuilder().UseStartup<Startup>().Build()
+            await WebHost.CreateDefaultBuilder().UseStartup<Startup>().Build()
                 .RunAsync().ConfigureAwait(false);
         } 
     }

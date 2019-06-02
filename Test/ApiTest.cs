@@ -5,18 +5,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Test
 {
     [TestClass]
-    public sealed class ApiTest : IDisposable
+    public sealed class ApiTest
     {
-        private TestServerFixture fixture;
+        private static TestServerFixture fixture;
 
         [ClassInitialize]
-        public void Init()
+        public static void Init(TestContext context)
         {
             fixture = new TestServerFixture();
         }
 
         [ClassCleanup]
-        public void Dispose()
+        public static void Finish()
         {
             fixture.Dispose();
         }
