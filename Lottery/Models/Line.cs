@@ -19,6 +19,7 @@ namespace Lottery.Models
         private readonly int[] allowed = { 0, 1, 2 };
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [IgnoreDataMemberAttribute]
         public int id { get; set; }
 
@@ -27,7 +28,6 @@ namespace Lottery.Models
         private string numbers;
 
         [NotMapped]
-        [JsonProperty("numbers")]
         public IList<int> Numbers
         {
             get
@@ -52,7 +52,6 @@ namespace Lottery.Models
         public DateTime Updated { get; set; }
 
         [NotMapped]
-        [JsonProperty("result")]
         public int Result
         {
             get

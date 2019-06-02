@@ -12,7 +12,7 @@ namespace Lottery.Models
     public class Ticket
     {
         [Key]
-        [JsonProperty("id")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
