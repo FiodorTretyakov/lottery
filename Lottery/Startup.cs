@@ -29,7 +29,6 @@ namespace Lottery
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         [Obsolete("Until .net core 3")]
         public void ConfigureServices(IServiceCollection services)
         {
@@ -38,8 +37,7 @@ namespace Lottery
                 (options => options.UseLoggerFactory(MyLoggerFactory)
                 .UseSqlite(Configuration.GetConnectionString("LotteryDatabase")));
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

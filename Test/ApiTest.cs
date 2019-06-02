@@ -6,9 +6,9 @@ namespace Test
     public class ApiTest
     {
         [ClassInitialize]
-        public static void TestFixtureSetup(TestContext context)
-        { 
-           
+        public static TestFixtureSetup(TestContext context)
+        {
+
         }
 
         [TestMethod]
