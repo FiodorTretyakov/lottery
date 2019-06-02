@@ -8,7 +8,7 @@ using Lottery.Db;
 
 namespace Lottery.Controllers
 {
-    [Route("ticket")]
+    [Route("[controller]")]
     [ApiController]
     public class TicketController : ControllerBase
     {

@@ -4,7 +4,7 @@ using Lottery.Db;
 
 namespace Lottery.Controllers
 {
-    [Route("status")]
+    [Route("[controller]")]
     [ApiController]
     public class StatusController : ControllerBase
     {
