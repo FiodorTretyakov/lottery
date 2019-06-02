@@ -38,7 +38,7 @@ namespace Lottery
                 .UseSqlite(Configuration.GetConnectionString("LotteryDatabase")));
         }
         
-        public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
