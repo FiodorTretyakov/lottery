@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Lottery.Db;
+using Lottery.Models;
 
 namespace Lottery.Controllers
 {
@@ -8,15 +8,19 @@ namespace Lottery.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
+        private readonly TicketContext context;
+
+        public StatusController(TicketContext c)
+        {
+            context = c;
+        }
+
         [HttpPut("/{id}")]
         public async Task Put(int id)
         {
-            using (var context = new TicketContext())
-            {
-                var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
-                ticket.IsChecked = true;
-                await context.SaveChangesAsync().ConfigureAwait(false);
-            }
+            var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
+            ticket.IsChecked = true;
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

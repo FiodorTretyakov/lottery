@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Lottery.Db
+namespace Lottery.Models
 {
     public class Line
     {
