@@ -12,36 +12,23 @@ namespace Lottery.Db
     {
         [NotMapped]
         [IgnoreDataMemberAttribute]
+        public const int Size = 3;
+
+        [NotMapped]
+        [IgnoreDataMemberAttribute]
         private readonly int[] allowed = { 0, 1, 2 };
 
         [Required]
         [IgnoreDataMemberAttribute]
-        private string data;
+        private string numbers;
 
         [NotMapped]
-        [IgnoreDataMemberAttribute]
-        private readonly int[] numbers = new int[3];
-
-        [NotMapped]
-        public IList<int> Numbers
+        [JsonProperty("numbers")]
+        public int[] Numbers
         {
             get
             {
-                return JsonConvert.DeserializeObject<int[]>(data);
-            }
-            set
-            {
-                if (value.Count != Size)
-                {
-                    throw new ArgumentOutOfRangeException($"Line length should be {Size}, but {value.Count}");
-                }
-
-                if (value.Any(n => !allowed.Any(a => a == n)))
-                {
-                    throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(",", allowed)}, but {string.Join(",", value)}");
-                }
-
-                data = JsonConvert.SerializeObject(value);
+                return JsonConvert.DeserializeObject<int[]>(numbers);
             }
         }
 
@@ -65,6 +52,7 @@ namespace Lottery.Db
         public DateTime Updated { get; set; }
 
         [NotMapped]
+        [JsonProperty("result")]
         public int Result
         {
             get
@@ -92,9 +80,19 @@ namespace Lottery.Db
         {
         }
 
-        public Line(IList<int> numbers)
+        public Line(int[] nums)
         {
-            Numbers = numbers;
+            if (nums.Length != Size)
+            {
+                throw new ArgumentOutOfRangeException($"Line length should be {Size}, but {nums.Length}");
+            }
+
+            if (nums.Any(n => !allowed.Any(a => a == n)))
+            {
+                throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(",", allowed)}, but {string.Join(",", nums)}");
+            }
+
+            numbers = JsonConvert.SerializeObject(nums);
         }
     }
 }

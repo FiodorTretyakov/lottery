@@ -72,7 +72,7 @@ namespace Lottery.Db
         }
 
         public static IList<Line> DeserializeLines(string data) =>
-            JsonConvert.DeserializeObject<ICollection<IList<int>>>(data).Select(lineData =>
+            JsonConvert.DeserializeObject<ICollection<int[]>>(data).Select(lineData =>
             new Line(lineData)).ToList();
     }
 }
