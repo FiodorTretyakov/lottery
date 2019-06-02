@@ -42,7 +42,6 @@ namespace Lottery.Controllers
                 {
                     var ticket = new Ticket(GetLines(value));
                     await context.Tickets.AddAsync(ticket).ConfigureAwait(false);
-                    await context.Lines.AddRangeAsync(ticket.Lines).ConfigureAwait(false);
                     await context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
 
@@ -63,8 +62,8 @@ namespace Lottery.Controllers
 
                     var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
                     ticket.SetLines(lines);
-                    await context.Lines.AddRangeAsync(ticket.Lines).ConfigureAwait(false);
-
+                    
+                    await context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
                 }
             }
