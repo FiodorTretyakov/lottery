@@ -42,7 +42,16 @@ namespace Lottery.Controllers
         {
             using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                var ticket = new Ticket(value);
+                Ticket ticket;
+                try
+                {
+                    ticket = new Ticket(value);
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    return BadRequest(e);
+                }
+
                 await context.Tickets.AddAsync(ticket).ConfigureAwait(false);
                 await context.SaveChangesAsync().ConfigureAwait(false);
                 transaction.Commit();
