@@ -9,10 +9,8 @@ namespace Lottery.Models
 {
     public class Line
     {
-        [NotMapped]
         public const int Size = 3;
 
-        [NotMapped]
         private readonly int[] allowed = { 0, 1, 2 };
 
         [Key]
@@ -36,10 +34,8 @@ namespace Lottery.Models
         public Ticket ParentTicket { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-
         public DateTime Inserted { get; } = DateTime.UtcNow;
 
-        [NotMapped]
         public int Result
         {
             get

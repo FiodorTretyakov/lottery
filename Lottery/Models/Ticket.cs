@@ -26,7 +26,6 @@ namespace Lottery.Models
             }
         }
 
-        [NotMapped]
         private bool isChecked;
 
         public bool IsChecked
