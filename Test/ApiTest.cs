@@ -60,8 +60,8 @@ namespace Test
 
         [TestMethod]
         public async Task PutTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await fixture.Client.PutAsync(GetUri("ticket/1"),
-            new StringContent(string.Empty, Encoding.UTF8, "application/json")).ConfigureAwait(false))
+            Assert.AreEqual(HttpStatusCode.NotFound, (await fixture.Client.PutAsJsonAsync(GetUri("ticket/1"),
+            new StringContent(string.Empty, Encoding.Default, "application/json")).ConfigureAwait(false))
             .StatusCode);
 
         [TestMethod]
@@ -69,7 +69,7 @@ namespace Test
         {
             var response = await fixture.Client.PostAsJsonAsync(GetUri("ticket"),
                 new StringContent("[[2,2,2],[1,1,1]]",
-                Encoding.UTF8, "application/json")).ConfigureAwait(false);
+                Encoding.Default, "application/json")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
         }
