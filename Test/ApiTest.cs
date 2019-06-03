@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,6 +13,7 @@ namespace Test
         [ClassInitialize]
         public static void Init(TestContext context)
         {
+            Debug.WriteLine($"Server started with test: {context.TestName}");
             fixture = new TestServerFixture();
         }
 
@@ -24,7 +26,7 @@ namespace Test
         [TestMethod]
         public async Task GetAllTickets()
         {
-            var response = await fixture.Client.GetAsync("ticket").ConfigureAwait(false);
+            var response = await fixture.Client.GetAsync(new Uri($"{fixture.Client.BaseAddress}ticket")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
