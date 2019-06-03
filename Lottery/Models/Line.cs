@@ -11,12 +11,6 @@ namespace Lottery.Models
     [DataContract]
     public class Line
     {
-        [NotMapped]
-        public const int Size = 3;
-
-        [NotMapped]
-        private readonly int[] allowed = { 0, 1, 2 };
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
@@ -71,9 +65,12 @@ namespace Lottery.Models
 
         public Line(int[] nums)
         {
-            if (nums.Length != Size)
+            const int size = 3;
+            int[] allowed = { 0, 1, 2 };
+
+            if (nums.Length != size)
             {
-                throw new ArgumentOutOfRangeException($"Line length should be {Size}, but {nums.Length}");
+                throw new ArgumentOutOfRangeException($"Line length should be {size}, but {nums.Length}");
             }
 
             if (nums.Any(n => !allowed.Any(a => a == n)))
