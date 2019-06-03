@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Lottery.Models;
+using System.Net;
 
 namespace Test
 {
@@ -50,6 +51,18 @@ namespace Test
         [TestMethod]
         public async Task GetAllTicketsEmpty() =>
             Assert.AreEqual("[]", await fixture.Client.GetStringAsync(GetUri("ticket")).ConfigureAwait(false));
+
+
+        [TestMethod]
+        public async Task GetTicketNotFound() =>
+            Assert.AreEqual(HttpStatusCode.NotFound, (await fixture.Client.GetAsync(GetUri("ticket/1")).
+            ConfigureAwait(false)).StatusCode);
+
+        [TestMethod]
+        public async Task PutTicketNotFound() =>
+            Assert.AreEqual(HttpStatusCode.NotFound, (await fixture.Client.PutAsync(GetUri("ticket/1"),
+            new StringContent(string.Empty, Encoding.UTF8, "application/json")).ConfigureAwait(false))
+            .StatusCode);
 
         [TestMethod]
         public async Task CreateTicket()
