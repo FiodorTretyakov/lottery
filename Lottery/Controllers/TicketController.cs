@@ -85,7 +85,7 @@ namespace Lottery.Controllers
 
                 try
                 {
-                    ticket.Lines.ToList().AddRange(Ticket.DeserializeLines(value));
+                    ticket.Lines.AddRange(Ticket.DeserializeLines(value));
                 }
                 catch (ArgumentOutOfRangeException e)
                 {

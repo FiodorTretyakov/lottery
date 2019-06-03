@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,25 +16,9 @@ namespace Lottery.Models
         [DataMember]
         public int Id { get; set; }
 
-        [DataMember]
-        private IList<Line> lines = new List<Line>();
-
         [Required]
-        public ICollection<Line> Lines
-        {
-            get
-            {
-                return IsChecked ? new ReadOnlyCollection<Line>(lines) : lines;
-            }
-            private set
-            {
-                if (value.Count == 0)
-                {
-                    throw new ArgumentOutOfRangeException($"The ticket should have more {value.Count} lines.");
-                }
-                lines = value.ToList();
-            }
-        }
+        [DataMember]
+        public List<Line> Lines = new List<Line>();
 
         private bool isChecked;
 
@@ -70,8 +53,17 @@ namespace Lottery.Models
             Lines = DeserializeLines(data);
         }
 
-        public static IList<Line> DeserializeLines(string data) =>
-            JsonConvert.DeserializeObject<ICollection<int[]>>(data).Select(lineData =>
+        public static List<Line> DeserializeLines(string data)
+        {
+            var lines = JsonConvert.DeserializeObject<ICollection<int[]>>(data).Select(lineData =>
                 new Line(lineData)).ToList();
+
+            if (lines.Count == 0)
+            {
+                throw new ArgumentOutOfRangeException($"The ticket should have more {lines.Count} lines.");
+            }
+
+            return lines;
+        }
     }
 }
