@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Lottery.Models;
 
 namespace Lottery.Controllers
@@ -19,11 +20,12 @@ namespace Lottery.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Ticket>> Get() => context.Tickets.ToList();
+        public async Task<ActionResult<IEnumerable<Ticket>>> Get() =>
+            await context.Tickets.Include(t => t.Lines).ToListAsync().ConfigureAwait(false);
 
         [HttpGet("/{id}")]
         public async Task<ActionResult<Ticket>> Get(int id) =>
-            await context.Tickets.FindAsync(id).ConfigureAwait(false);
+            await context.Tickets.Include(t => t.Lines).FirstAsync(t => t.Id == id).ConfigureAwait(false);
 
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] string value)
@@ -40,7 +42,7 @@ namespace Lottery.Controllers
         }
 
         [HttpPut("/{id}")]
-        public async Task Put(int id, [FromBody] string value)
+        public async Task<ActionResult<Ticket>> Put(int id, [FromBody] string value)
         {
             using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
@@ -52,6 +54,8 @@ namespace Lottery.Controllers
 
                 await context.SaveChangesAsync().ConfigureAwait(false);
                 transaction.Commit();
+
+                return ticket;
             }
         }
     }
