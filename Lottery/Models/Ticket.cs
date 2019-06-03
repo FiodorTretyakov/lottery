@@ -15,15 +15,15 @@ namespace Lottery.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
-        [MinLength(1)]
-        private readonly Line[] lines;
+        [NotMapped]
+        private readonly IList<Line> lines = new List<Line>();
 
-        public IEnumerable<Line> Lines
+        [Required]
+        public ICollection<Line> Lines
         {
             get
             {
-                return IsChecked ? Array.AsReadOnly(lines) : lines.Select(line => line);
+                return IsChecked ? new ReadOnlyCollection<Line>(lines) : lines;
             }
         }
 
@@ -55,16 +55,20 @@ namespace Lottery.Models
         private Ticket()
         {
         }
-        public Ticket(IEnumerable<Line> linesData)
+        public Ticket(IList<Line> linesData)
         {
-            lines = linesData.ToArray();
+            if (linesData.Count == 0)
+            {
+                throw new ArgumentOutOfRangeException($"The ticket should have more {linesData.Count} lines.");
+            }
+            lines = linesData;
         }
 
         public Ticket(string data) : this(DeserializeLines(data))
         {
         }
 
-        public static IEnumerable<Line> DeserializeLines(string data) =>
+        public static IList<Line> DeserializeLines(string data) =>
             JsonConvert.DeserializeObject<ICollection<int[]>>(data).Select(lineData =>
             new Line(lineData)).ToList();
     }

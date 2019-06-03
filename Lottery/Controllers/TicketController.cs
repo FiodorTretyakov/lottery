@@ -76,7 +76,7 @@ namespace Lottery.Controllers
 
                 try
                 {
-                    ticket.Lines.ToList().Clear();
+                    ticket.Lines.Clear();
                 }
                 catch (NotSupportedException e)
                 {
