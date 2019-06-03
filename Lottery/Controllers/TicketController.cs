@@ -40,63 +40,59 @@ namespace Lottery.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] string value)
         {
-            using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            Ticket ticket;
+            try
             {
-                Ticket ticket;
-                try
-                {
-                    ticket = new Ticket(value);
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    return BadRequest(e);
-                }
-
-                await context.Tickets.AddAsync(ticket).ConfigureAwait(false);
-                await context.SaveChangesAsync().ConfigureAwait(false);
-                transaction.Commit();
-
-                return ticket.Id;
+                ticket = new Ticket(value);
             }
+            catch (ArgumentOutOfRangeException e)
+            {
+                return BadRequest(e);
+            }
+
+            await context.Tickets.AddAsync(ticket).ConfigureAwait(false);
+            await context.SaveChangesAsync().ConfigureAwait(false);
+
+            return ticket.Id;
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] string value)
         {
-            using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
+
+            if (ticket == null)
             {
-                var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
-
-                if (ticket == null)
-                {
-                    return NotFound();
-                }
-
-                context.Lines.RemoveRange(context.Lines.Where(line => line.TicketId == id));
-
-                try
-                {
-                    ticket.Lines.Clear();
-                }
-                catch (NotSupportedException e)
-                {
-                    return BadRequest(e);
-                }
-
-                try
-                {
-                    ticket.Lines.AddRange(Ticket.DeserializeLines(value));
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    return BadRequest(e);
-                }
-
-                await context.SaveChangesAsync().ConfigureAwait(false);
-                transaction.Commit();
-
-                return Ok();
+                return NotFound();
             }
+
+            if (ticket.IsChecked)
+            {
+                return BadRequest("It is not possible to amend checked ticket.");
+            }
+
+            List<Line> lines;
+            try
+            {
+                lines = Ticket.DeserializeLines(value);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                return BadRequest(e);
+            }
+
+            if (ticket.Lines.Count != lines.Count)
+            {
+                return BadRequest($"Ticket created with {ticket.Lines.Count}, but amended with {lines.Count}.");
+            }
+
+            context.Lines.RemoveRange(context.Lines.Where(line => line.TicketId == id));
+            ticket.Lines.Clear();
+            ticket.Lines.AddRange(lines);
+
+            await context.SaveChangesAsync().ConfigureAwait(false);
+
+            return Ok();
         }
     }
 }

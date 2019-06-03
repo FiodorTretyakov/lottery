@@ -18,7 +18,7 @@ namespace Lottery.Models
 
         [Required]
         [DataMember]
-        public List<Line> Lines = new List<Line>();
+        public List<Line> Lines { get; } = new List<Line>();
 
         private bool isChecked;
 
@@ -50,7 +50,7 @@ namespace Lottery.Models
 
         public Ticket(string data)
         {
-            Lines = DeserializeLines(data);
+            Lines.AddRange(DeserializeLines(data));
         }
 
         public static List<Line> DeserializeLines(string data)
