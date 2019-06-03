@@ -1,39 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+using Lottery;
 using Lottery.Models;
-using System.Net;
 
 namespace Test
 {
     [TestClass]
-    public sealed class ApiTest
+    public class ApiTest
     {
-        private static TestServerFixture fixture;
+        private readonly CustomWebApplicationFactory<Startup> _factory;
 
-        private static Uri GetUri(string route) => new Uri($"{fixture.Client.BaseAddress}{route}");
-
-        [ClassInitialize]
-        public static void Init(TestContext context)
+        public ApiTest()
         {
-            Debug.WriteLine($"Server started with test: {context.TestName}");
-            fixture = new TestServerFixture();
+            _factory = new CustomWebApplicationFactory<Startup>();
         }
-
-        [ClassCleanup]
-        public static void Finish() => fixture.Dispose();
 
         [TestCleanup]
         public void TearDown()
         {
             using (var context = new TicketContext(new DbContextOptionsBuilder<TicketContext>()
-                .UseInMemoryDatabase(TestServerFixture.TestDbName).Options))
+                .UseInMemoryDatabase(CustomWebApplicationFactory<Startup>.TestDbName).Options))
             {
                 foreach (var ticket in context.Tickets)
                 {
@@ -50,24 +40,24 @@ namespace Test
 
         [TestMethod]
         public async Task GetAllTicketsEmpty() =>
-            Assert.AreEqual("[]", await fixture.Client.GetStringAsync(GetUri("ticket")).ConfigureAwait(false));
+            Assert.AreEqual("[]", await _factory.CreateClient().GetStringAsync("ticket").ConfigureAwait(false));
 
 
         [TestMethod]
         public async Task GetTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await fixture.Client.GetAsync(GetUri("ticket/1")).
+            Assert.AreEqual(HttpStatusCode.NotFound, (await _factory.CreateClient().GetAsync("ticket/1").
             ConfigureAwait(false)).StatusCode);
 
         [TestMethod]
         public async Task PutTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await fixture.Client.PutAsJsonAsync(GetUri("ticket/1"),
+            Assert.AreEqual(HttpStatusCode.NotFound, (await _factory.CreateClient().PutAsJsonAsync("ticket/1",
             new StringContent(string.Empty, Encoding.Default, "application/json")).ConfigureAwait(false))
             .StatusCode);
 
         [TestMethod]
         public async Task CreateTicket()
         {
-            var response = await fixture.Client.PostAsJsonAsync(GetUri("ticket"),
+            var response = await _factory.CreateClient().PostAsJsonAsync("ticket",
                 new StringContent("[[2,2,2],[1,1,1]]",
                 Encoding.Default, "application/json")).ConfigureAwait(false);
 

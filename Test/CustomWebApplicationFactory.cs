@@ -1,28 +1,22 @@
 using System;
-using System.Net.Http;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Lottery;
 using Lottery.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Test
 {
-    public sealed class TestServerFixture : IDisposable
+    public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
     {
         public const string TestDbName = "InMemoryDbForTesting";
-
-        private readonly TestServer testServer;
-
-        public HttpClient Client { get; }
-
-        public TestServerFixture()
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            testServer = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Development").UseStartup<Startup>()
-                .ConfigureServices(services =>
+            base.ConfigureWebHost(builder
+                            .ConfigureServices(services =>
                 {
                     services.AddDbContext<TicketContext>(options =>
                                 {
@@ -32,13 +26,6 @@ namespace Test
                                         .BuildServiceProvider());
                                 });
                 }));
-            Client = testServer.CreateClient();
-        }
-
-        public void Dispose()
-        {
-            Client.Dispose();
-            testServer.Dispose();
         }
     }
 }
