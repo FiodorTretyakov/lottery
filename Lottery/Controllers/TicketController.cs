@@ -21,7 +21,8 @@ namespace Lottery.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> Get() =>
-            await context.Tickets.Include(t => t.Lines).ToListAsync().ConfigureAwait(false);
+            await context.Tickets.Include(t => t.Lines).ToListAsync()
+            .ConfigureAwait(false);
 
         [HttpGet("/{id}")]
         public async Task<ActionResult<Ticket>> Get(int id) =>
