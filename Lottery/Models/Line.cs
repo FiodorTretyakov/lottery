@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace Lottery.Models
 {
     public class Line
     {
+        [NotMapped]
         public const int Size = 3;
 
+        [NotMapped]
         private readonly int[] allowed = { 0, 1, 2 };
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [IgnoreDataMemberAttribute]
         public int id { get; set; }
 
         [Required]
+        [IgnoreDataMemberAttribute]
         public string NumbersData { get; private set; }
 
         public IList<int> Numbers
@@ -28,12 +33,15 @@ namespace Lottery.Models
             }
         }
 
+        [IgnoreDataMemberAttribute]
         public int TicketId { get; set; }
 
         [ForeignKey("TicketId")]
+        [IgnoreDataMemberAttribute]
         public Ticket ParentTicket { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [IgnoreDataMemberAttribute]
         public DateTime Inserted { get; } = DateTime.UtcNow;
 
         public int Result
