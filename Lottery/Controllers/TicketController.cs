@@ -14,10 +14,7 @@ namespace Lottery.Controllers
     {
         private readonly TicketContext context;
 
-        public TicketController(TicketContext c)
-        {
-            context = c;
-        }
+        public TicketController(TicketContext c) => context = c;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ticket>>> Get() =>

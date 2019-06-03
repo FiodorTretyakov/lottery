@@ -11,10 +11,7 @@ namespace Lottery.Controllers
     {
         private readonly TicketContext context;
 
-        public StatusController(TicketContext c)
-        {
-            context = c;
-        }
+        public StatusController(TicketContext c) => context = c;
 
         [HttpPut("{id}")]
         public async Task<ActionResult<Ticket>> Put(int id)

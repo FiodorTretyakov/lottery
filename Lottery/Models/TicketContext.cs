@@ -5,9 +5,7 @@ namespace Lottery.Models
     public class TicketContext : DbContext
     {
         public TicketContext(DbContextOptions<TicketContext> options) : base(options)
-        {
-             Database.EnsureCreated();
-        }
+            => Database.EnsureCreated();
 
         public DbSet<Ticket> Tickets { get; set; }
         

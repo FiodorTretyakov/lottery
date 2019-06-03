@@ -59,15 +59,9 @@ namespace Lottery.Models
             }
         }
 
-        public bool ShouldSerializeResult()
-        {
-            return ParentTicket.IsChecked;
-        }
+        public bool ShouldSerializeResult() => ParentTicket.IsChecked;
 
-        public bool ShouldSerializeNumbers()
-        {
-            return !ParentTicket.IsChecked;
-        }
+        public bool ShouldSerializeNumbers() => !ParentTicket.IsChecked;
 
         private Line()
         {

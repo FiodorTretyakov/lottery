@@ -48,10 +48,7 @@ namespace Lottery.Models
         {
         }
 
-        public Ticket(string data)
-        {
-            Lines.AddRange(DeserializeLines(data));
-        }
+        public Ticket(string data) => Lines.AddRange(DeserializeLines(data));
 
         public static List<Line> DeserializeLines(string data)
         {

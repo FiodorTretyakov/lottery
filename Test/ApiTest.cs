@@ -16,10 +16,7 @@ namespace Test
     {
         private static TestServerFixture fixture;
 
-        private static Uri GetUri(string route)
-        {
-            return new Uri($"{fixture.Client.BaseAddress}{route}");
-        }
+        private static Uri GetUri(string route) => new Uri($"{fixture.Client.BaseAddress}{route}");
 
         [ClassInitialize]
         public static void Init(TestContext context)
@@ -29,10 +26,7 @@ namespace Test
         }
 
         [ClassCleanup]
-        public static void Finish()
-        {
-            fixture.Dispose();
-        }
+        public static void Finish() => fixture.Dispose();
 
         [TestCleanup]
         public void TearDown()
