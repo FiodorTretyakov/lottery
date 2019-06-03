@@ -48,20 +48,14 @@ namespace Test
         }
 
         [TestMethod]
-        public async Task GetAllTicketsEmpty()
-        {
-            var response = await fixture.Client.GetAsync(GetUri("ticket")).ConfigureAwait(false);
-
-            response.EnsureSuccessStatusCode();
-
-            Assert.AreEqual("[]", await response.Content.ReadAsStringAsync().ConfigureAwait(false));
-        }
+        public async Task GetAllTicketsEmpty() =>
+            Assert.AreEqual("[]", await fixture.Client.GetStringAsync(GetUri("ticket")).ConfigureAwait(false));
 
         [TestMethod]
         public async Task CreateTicket()
         {
-            var response = await fixture.Client.PostAsync(GetUri("ticket"),
-                new StringContent(JsonConvert.SerializeObject(new List<int[]> { new int[] { 1, 1, 1 } }),
+            var response = await fixture.Client.PostAsJsonAsync(GetUri("ticket"),
+                new StringContent("[[2,2,2],[1,1,1]]",
                 Encoding.UTF8, "application/json")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
