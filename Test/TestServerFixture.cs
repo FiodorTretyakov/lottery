@@ -12,7 +12,10 @@ namespace Test
 {
     public sealed class TestServerFixture : IDisposable
     {
+        public const string TestDbName = "InMemoryDbForTesting";
+
         private readonly TestServer testServer;
+
         public HttpClient Client { get; }
 
         public TestServerFixture()
@@ -23,7 +26,7 @@ namespace Test
                 {
                     services.AddDbContext<TicketContext>(options =>
                                 {
-                                    options.UseInMemoryDatabase("InMemoryDbForTesting");
+                                    options.UseInMemoryDatabase(TestDbName);
                                     options.UseInternalServiceProvider(new ServiceCollection()
                                         .AddEntityFrameworkInMemoryDatabase()
                                         .BuildServiceProvider());
