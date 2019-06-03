@@ -36,6 +36,7 @@ namespace Lottery.Models
 
         private bool isChecked;
 
+        [IgnoreDataMemberAttribute]
         public bool IsChecked
         {
             get
