@@ -59,7 +59,8 @@ namespace Lottery.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] string value)
         {
-            var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
+            var ticket = await context.Tickets.Include(t => t.Lines).FirstOrDefaultAsync(t => t.Id == id)
+                .ConfigureAwait(false);
 
             if (ticket == null)
             {
