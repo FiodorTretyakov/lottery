@@ -64,6 +64,10 @@ namespace Lottery.Models
         }
         public Ticket(IList<Line> linesData)
         {
+            if (linesData.Count == 0)
+            {
+                throw new ArgumentOutOfRangeException("Ticket should be created at least with one line.");
+            }
             lines = linesData;
         }
 
