@@ -19,6 +19,7 @@ namespace Lottery.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
 
+        [Required]
         private string numbers;
 
         public IList<int> Numbers
