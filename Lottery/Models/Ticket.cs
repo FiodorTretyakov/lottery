@@ -17,17 +17,17 @@ namespace Lottery.Models
         [DataMember]
         public int Id { get; set; }
 
+        [DataMember]
         private IList<Line> lines = new List<Line>();
 
         [Required]
-        [DataMember]
         public ICollection<Line> Lines
         {
             get
             {
                 return IsChecked ? new ReadOnlyCollection<Line>(lines) : lines;
             }
-            set
+            private set
             {
                 if (value.Count == 0)
                 {
