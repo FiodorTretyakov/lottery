@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace Lottery.Models
 {
+    [DataContract]
     public class Line
     {
         [NotMapped]
@@ -18,13 +19,12 @@ namespace Lottery.Models
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [IgnoreDataMemberAttribute]
         public int id { get; set; }
 
         [Required]
-        [IgnoreDataMemberAttribute]
         public string NumbersData { get; private set; }
 
+        [DataMember]
         public IList<int> Numbers
         {
             get
@@ -33,17 +33,15 @@ namespace Lottery.Models
             }
         }
 
-        [IgnoreDataMemberAttribute]
         public int TicketId { get; set; }
 
         [ForeignKey("TicketId")]
-        [IgnoreDataMemberAttribute]
         public Ticket ParentTicket { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [IgnoreDataMemberAttribute]
         public DateTime Inserted { get; } = DateTime.UtcNow;
 
+        [DataMember]
         public int Result
         {
             get

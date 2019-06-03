@@ -9,15 +9,18 @@ using Newtonsoft.Json;
 
 namespace Lottery.Models
 {
+    [DataContract]
     public class Ticket
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DataMember]
         public int Id { get; set; }
 
         private IList<Line> lines = new List<Line>();
 
         [Required]
+        [DataMember]
         public ICollection<Line> Lines
         {
             get
@@ -36,7 +39,6 @@ namespace Lottery.Models
 
         private bool isChecked;
 
-        [IgnoreDataMemberAttribute]
         public bool IsChecked
         {
             get
@@ -57,7 +59,6 @@ namespace Lottery.Models
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [IgnoreDataMemberAttribute]
         public DateTime Inserted { get; } = DateTime.UtcNow;
 
         private Ticket()
