@@ -25,8 +25,17 @@ namespace Lottery.Controllers
             .ConfigureAwait(false);
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ticket>> Get(int id) =>
-            await context.Tickets.Include(t => t.Lines).FirstAsync(t => t.Id == id).ConfigureAwait(false);
+        public async Task<ActionResult<Ticket>> Get(int id)
+        {
+            var ticket = await context.Tickets.Include(t => t.Lines).FirstOrDefaultAsync(t => t.Id == id).ConfigureAwait(false);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return ticket;
+        }
 
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] string value)
@@ -48,6 +57,12 @@ namespace Lottery.Controllers
             using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
                 var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
+
+                if (ticket == null)
+                {
+                    return NotFound();
+                }
+
                 context.Lines.RemoveRange(context.Lines.Where(line => line.TicketId == id));
                 ticket.Lines.Clear();
 
@@ -56,7 +71,8 @@ namespace Lottery.Controllers
                 await context.SaveChangesAsync().ConfigureAwait(false);
                 transaction.Commit();
 
-                return ticket;
+                return await context.Tickets.Include(t => t.Lines).FirstAsync(t => t.Id == id)
+                    .ConfigureAwait(false);
             }
         }
     }

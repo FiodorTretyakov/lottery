@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Lottery.Models;
 
 namespace Lottery.Controllers
@@ -16,11 +17,19 @@ namespace Lottery.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task Put(int id)
+        public async Task<ActionResult<Ticket>> Put(int id)
         {
             var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
             ticket.IsChecked = true;
             await context.SaveChangesAsync().ConfigureAwait(false);
+
+            return await context.Tickets.Include(t => t.Lines).FirstAsync(t => t.Id == id).ConfigureAwait(false);
         }
     }
 }
