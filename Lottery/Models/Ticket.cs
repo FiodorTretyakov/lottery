@@ -55,10 +55,6 @@ namespace Lottery.Models
         [IgnoreDataMemberAttribute]
         public DateTime Inserted { get; } = DateTime.UtcNow;
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [IgnoreDataMemberAttribute]
-        public DateTime Updated { get; set; }
-
         private Ticket()
         {
         }
