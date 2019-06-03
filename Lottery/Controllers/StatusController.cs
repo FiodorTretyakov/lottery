@@ -15,7 +15,7 @@ namespace Lottery.Controllers
             context = c;
         }
 
-        [HttpPut("/{id}")]
+        [HttpPut("{id}")]
         public async Task Put(int id)
         {
             var ticket = await context.Tickets.FindAsync(id).ConfigureAwait(false);

@@ -24,7 +24,7 @@ namespace Lottery.Controllers
             await context.Tickets.Include(t => t.Lines).ToListAsync()
             .ConfigureAwait(false);
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> Get(int id) =>
             await context.Tickets.Include(t => t.Lines).FirstAsync(t => t.Id == id).ConfigureAwait(false);
 
@@ -42,7 +42,7 @@ namespace Lottery.Controllers
             }
         }
 
-        [HttpPut("/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<Ticket>> Put(int id, [FromBody] string value)
         {
             using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))

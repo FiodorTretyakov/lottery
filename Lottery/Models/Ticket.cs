@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace Lottery.Models
@@ -14,6 +15,7 @@ namespace Lottery.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [NotMapped]
         private readonly IList<Line> lines = new List<Line>();
 
         [Required]
@@ -48,6 +50,7 @@ namespace Lottery.Models
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [IgnoreDataMemberAttribute]
         public DateTime Inserted { get; } = DateTime.UtcNow;
 
         private Ticket()
