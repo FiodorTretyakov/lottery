@@ -83,8 +83,14 @@ namespace Lottery.Controllers
                     return BadRequest(e);
                 }
 
-
-                ticket.Lines.ToList().AddRange(Ticket.DeserializeLines(value));
+                try
+                {
+                    ticket.Lines.ToList().AddRange(Ticket.DeserializeLines(value));
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    return BadRequest(e);
+                }
 
                 await context.SaveChangesAsync().ConfigureAwait(false);
                 transaction.Commit();

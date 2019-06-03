@@ -55,21 +55,23 @@ namespace Lottery.Models
         private Ticket()
         {
         }
-        public Ticket(IList<Line> linesData)
+
+        public Ticket(string data)
         {
+            lines = DeserializeLines(data);
+        }
+
+        public static IList<Line> DeserializeLines(string data)
+        {
+            var linesData = JsonConvert.DeserializeObject<ICollection<int[]>>(data).Select(lineData =>
+                new Line(lineData)).ToList();
+
             if (linesData.Count == 0)
             {
                 throw new ArgumentOutOfRangeException($"The ticket should have more {linesData.Count} lines.");
             }
-            lines = linesData;
+            
+            return linesData;
         }
-
-        public Ticket(string data) : this(DeserializeLines(data))
-        {
-        }
-
-        public static IList<Line> DeserializeLines(string data) =>
-            JsonConvert.DeserializeObject<ICollection<int[]>>(data).Select(lineData =>
-            new Line(lineData)).ToList();
     }
 }
