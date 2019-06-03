@@ -60,7 +60,7 @@ namespace Lottery.Models
 
             if (lines.Count == 0)
             {
-                throw new ArgumentOutOfRangeException($"The ticket should have more {lines.Count} lines.");
+                throw new ArgumentOutOfRangeException($"The ticket should have more than {lines.Count} lines.");
             }
 
             return lines;

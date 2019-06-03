@@ -47,7 +47,7 @@ namespace Lottery.Controllers
             }
             catch (ArgumentOutOfRangeException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
 
             await context.Tickets.AddAsync(ticket).ConfigureAwait(false);
@@ -78,12 +78,13 @@ namespace Lottery.Controllers
             }
             catch (ArgumentOutOfRangeException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
 
             if (ticket.Lines.Count != lines.Count)
             {
-                return BadRequest($"Ticket created with {ticket.Lines.Count}, but amended with {lines.Count}.");
+                return BadRequest(
+                    $"Ticket created with {ticket.Lines.Count} lines, but try to amend with {lines.Count} lines.");
             }
 
             context.Lines.RemoveRange(context.Lines.Where(line => line.TicketId == id));

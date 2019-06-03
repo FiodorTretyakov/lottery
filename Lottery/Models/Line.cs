@@ -80,12 +80,12 @@ namespace Lottery.Models
 
             if (nums.Length != size)
             {
-                throw new ArgumentOutOfRangeException($"Line length should be {size}, but {nums.Length}");
+                throw new ArgumentOutOfRangeException($"Line length should be {size}, but {nums.Length}.");
             }
 
             if (nums.Any(n => !allowed.Any(a => a == n)))
             {
-                throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(",", allowed)}, but {string.Join(",", nums)}");
+                throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(",", allowed)}, but {string.Join(",", nums)}.");
             }
 
             NumbersData = JsonConvert.SerializeObject(nums);
