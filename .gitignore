@@ -3,3 +3,4 @@ bin
 .vscode/solution-explorer
 Migrations
 *.db
+*.db-journal
