@@ -73,7 +73,7 @@ namespace Lottery.Controllers
                 }
 
                 context.Lines.RemoveRange(context.Lines.Where(line => line.TicketId == id));
-                ticket.Lines.Clear();
+                ticket.Lines.ToList().Clear();
 
                 ticket.Lines.ToList().AddRange(Ticket.DeserializeLines(value));
 
