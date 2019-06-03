@@ -66,7 +66,7 @@ namespace Test
         [TestMethod]
         public async Task CreateTicket()
         {
-            var response = await fixture.Client.PostAsync(new Uri($"{fixture.Client.BaseAddress}ticket"),
+            var response = await fixture.Client.PostAsync(GetUri("ticket"),
                 new StringContent(JsonConvert.SerializeObject(new List<int[]> { new int[] { 1, 1, 1 } }),
                 Encoding.UTF8, "application/json")).ConfigureAwait(false);
 

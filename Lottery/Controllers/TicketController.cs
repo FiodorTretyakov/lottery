@@ -26,7 +26,7 @@ namespace Lottery.Controllers
             await context.Tickets.FindAsync(id).ConfigureAwait(false);
 
         [HttpPost]
-        public async Task<int> Post([FromBody] string value)
+        public async Task<ActionResult<int>> Post([FromBody] string value)
         {
             using (var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
