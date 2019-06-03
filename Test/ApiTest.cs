@@ -50,15 +50,15 @@ namespace Test
 
         [TestMethod]
         public async Task PutTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await _factory.CreateClient().PutAsJsonAsync("ticket/1",
-            new StringContent(string.Empty, Encoding.Default, "application/json")).ConfigureAwait(false))
+            Assert.AreEqual(HttpStatusCode.NotFound, (await _factory.CreateClient().PutAsync("ticket/1",
+            new StringContent("222", Encoding.UTF8, "application/json")).ConfigureAwait(false))
             .StatusCode);
 
         [TestMethod]
         public async Task CreateTicket()
         {
-            var response = await _factory.CreateClient().PostAsJsonAsync("ticket",
-                new StringContent("[[2,2,2],[1,1,1]]",
+            var response = await _factory.CreateClient().PostAsync("ticket",
+                new StringContent("1",
                 Encoding.Default, "application/json")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
