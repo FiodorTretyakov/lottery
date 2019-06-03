@@ -20,13 +20,13 @@ namespace Lottery.Models
         public int id { get; set; }
 
         [Required]
-        private string numbers;
+        public string NumbersData { get; private set; }
 
         public IList<int> Numbers
         {
             get
             {
-                return JsonConvert.DeserializeObject<IList<int>>(numbers);
+                return JsonConvert.DeserializeObject<IList<int>>(NumbersData);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Lottery.Models
                 throw new ArgumentOutOfRangeException($"There are only allowed values {string.Join(",", allowed)}, but {string.Join(",", nums)}");
             }
 
-            numbers = JsonConvert.SerializeObject(nums);
+            NumbersData = JsonConvert.SerializeObject(nums);
         }
     }
 }
