@@ -4,3 +4,4 @@ bin
 Migrations
 *.db
 *.db-journal
+coverage.json

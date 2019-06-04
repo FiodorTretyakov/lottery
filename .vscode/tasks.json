@@ -31,6 +31,19 @@
                 "${workspaceFolder}/lottery/lottery.csproj"
             ],
             "problemMatcher": "$tsc"
+        },
+        {
+            "label": "test watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "-p",
+                "${workspaceFolder}/Test/Test.csproj",
+                "test",
+                "/p:CollectCoverage=true"
+            ],
+            "problemMatcher": "$tsc"
         }
     ]
 }
