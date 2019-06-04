@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -10,13 +11,13 @@ using Lottery.Models;
 namespace Test
 {
     [TestClass]
-    public class ApiTest
+    public class ApiTest : IDisposable
     {
-        private readonly CustomWebApplicationFactory<Startup> _factory;
+        private readonly CustomWebApplicationFactory<Startup> factory;
 
         public ApiTest()
         {
-            _factory = new CustomWebApplicationFactory<Startup>();
+            factory = new CustomWebApplicationFactory<Startup>();
         }
 
         [TestCleanup]
@@ -38,28 +39,33 @@ namespace Test
             }
         }
 
+        public void Dispose()
+        {
+            factory.Dispose();
+        }
+
         [TestMethod]
         public async Task GetAllTicketsEmpty() =>
-            Assert.AreEqual("[]", await _factory.CreateClient().GetStringAsync("ticket").ConfigureAwait(false));
+            Assert.AreEqual("[]", await factory.CreateClient().GetStringAsync("ticket").ConfigureAwait(false));
 
 
         [TestMethod]
         public async Task GetTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await _factory.CreateClient().GetAsync("ticket/1").
+            Assert.AreEqual(HttpStatusCode.NotFound, (await factory.CreateClient().GetAsync("ticket/1").
             ConfigureAwait(false)).StatusCode);
 
         [TestMethod]
         public async Task PutTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await _factory.CreateClient().PutAsync("ticket/1",
+            Assert.AreEqual(HttpStatusCode.NotFound, (await factory.CreateClient().PutAsync("ticket/1",
             new StringContent("222", Encoding.UTF8, "application/json")).ConfigureAwait(false))
             .StatusCode);
 
         [TestMethod]
         public async Task CreateTicket()
         {
-            var response = await _factory.CreateClient().PostAsync("ticket",
-                new StringContent("1",
-                Encoding.Default, "application/json")).ConfigureAwait(false);
+            var response = await factory.CreateClient().PostAsync("ticket",
+                new StringContent("",
+                Encoding.UTF8, "application/json")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
         }
