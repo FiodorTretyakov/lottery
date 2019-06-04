@@ -20,6 +20,10 @@ namespace Test
             factory = new CustomWebApplicationFactory<Startup>();
         }
 
+        private HttpClient Client => factory.CreateClient();
+
+        private Uri GetUri(string controller) => new Uri($"{factory.ClientOptions.BaseAddress}/{controller}");
+
         [TestCleanup]
         public void TearDown()
         {
@@ -46,26 +50,25 @@ namespace Test
 
         [TestMethod]
         public async Task GetAllTicketsEmpty() =>
-            Assert.AreEqual("[]", await factory.CreateClient().GetStringAsync("ticket").ConfigureAwait(false));
+            Assert.AreEqual("[]", await Client.GetStringAsync(GetUri("ticket")).ConfigureAwait(false));
 
 
         [TestMethod]
         public async Task GetTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await factory.CreateClient().GetAsync("ticket/1").
+            Assert.AreEqual(HttpStatusCode.NotFound, (await Client.GetAsync(GetUri("ticket/1")).
             ConfigureAwait(false)).StatusCode);
 
         [TestMethod]
         public async Task PutTicketNotFound() =>
-            Assert.AreEqual(HttpStatusCode.NotFound, (await factory.CreateClient().PutAsync("ticket/1",
-            new StringContent("222", Encoding.UTF8, "application/json")).ConfigureAwait(false))
+            Assert.AreEqual(HttpStatusCode.NotFound, (await Client.PutAsync(GetUri("ticket/1"),
+            new StringContent("[[1, 2, 0]]", Encoding.UTF8, "application/json")).ConfigureAwait(false))
             .StatusCode);
 
         [TestMethod]
         public async Task CreateTicket()
         {
-            var response = await factory.CreateClient().PostAsync("ticket",
-                new StringContent("\"[[1, 1, 1]]\"",
-                Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            var response = await Client.PostAsync(GetUri("ticket"),
+                new StringContent("[[1, 1, 1]]", Encoding.UTF8, "application/json")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
         }
