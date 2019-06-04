@@ -13,16 +13,5 @@ namespace Test
 {
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder) =>
-            builder.ConfigureServices(services =>
-            {
-                services
-                    .AddEntityFrameworkSqlite()
-                    .AddDbContext<TicketContext>(options =>
-                    {
-                        options.UseSqlite("DataSource=:memory:");
-                        options.UseInternalServiceProvider(services.BuildServiceProvider());
-                    });
-            });
     }
 }

@@ -18,6 +18,5 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0"/>
     <ProjectReference Include="..\Lottery\Lottery.csproj"/>
-    <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
