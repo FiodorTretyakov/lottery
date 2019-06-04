@@ -7,25 +7,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Lottery;
 using Lottery.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Test
 {
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
     {
-        public const string TestDbName = "InMemoryDbForTesting";
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            base.ConfigureWebHost(builder
-                            .ConfigureServices(services =>
-                {
-                    services.AddDbContext<TicketContext>(options =>
-                                {
-                                    options.UseInMemoryDatabase(TestDbName);
-                                    options.UseInternalServiceProvider(new ServiceCollection()
-                                        .AddEntityFrameworkInMemoryDatabase()
-                                        .BuildServiceProvider());
-                                });
-                }));
-        }
+        protected override void ConfigureWebHost(IWebHostBuilder builder) =>
+            builder.ConfigureServices(services =>
+            {
+                services
+                    .AddEntityFrameworkSqlite()
+                    .AddDbContext<TicketContext>(options =>
+                    {
+                        options.UseSqlite("DataSource=:memory:");
+                        options.UseInternalServiceProvider(services.BuildServiceProvider());
+                    });
+            });
     }
 }
