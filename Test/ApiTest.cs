@@ -75,7 +75,7 @@ namespace Test
         public async Task CreateTicket()
         {
             var ticket1 = await Client.PostAsync(GetUri("ticket"), GetBody("[[1,1,1]]")).ConfigureAwait(false);
-            ticket1.EnsureSuccessStatusCode();
+            Assert.IsTrue(ticket1.IsSuccessStatusCode);
 
             var id1 = await ticket1.Content.ReadAsStringAsync().ConfigureAwait(false);
             var ticket1Json = $"{{\"id\":{id1},\"lines\":[{{\"numbers\":[1,1,1]}}]}}";
@@ -84,7 +84,7 @@ namespace Test
 
             var ticket2 = await Client.PostAsync(GetUri("ticket"),
                 GetBody("[[1,0,1],[0,0,0]]")).ConfigureAwait(false);
-            ticket2.EnsureSuccessStatusCode();
+            Assert.IsTrue(ticket2.IsSuccessStatusCode);
 
             var id2 = await ticket2.Content.ReadAsStringAsync().ConfigureAwait(false);
             var ticket2Json = $"{{\"id\":{id2},\"lines\":[{{\"numbers\":[1,0,1]}},{{\"numbers\":[0,0,0]}}]}}";
@@ -98,7 +98,7 @@ namespace Test
         public async Task AmendTicketFailedData()
         {
             var ticket = await Client.PostAsync(GetUri("ticket"), GetBody("[[1,1,1]]")).ConfigureAwait(false);
-            ticket.EnsureSuccessStatusCode();
+            Assert.IsTrue(ticket.IsSuccessStatusCode);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, (await Client.PutAsync(GetUri(
                 $"ticket/{await ticket.Content.ReadAsStringAsync().ConfigureAwait(false)}"), GetBody("[[1,3,1]]")).
@@ -109,7 +109,7 @@ namespace Test
         public async Task AmendTicketFailedNotEqualNumberOfLines()
         {
             var ticket = await Client.PostAsync(GetUri("ticket"), GetBody("[[1,1,1]]")).ConfigureAwait(false);
-            ticket.EnsureSuccessStatusCode();
+            Assert.IsTrue(ticket.IsSuccessStatusCode);
 
             Assert.AreEqual(HttpStatusCode.BadRequest, (await Client.PutAsync(GetUri(
                 $"ticket/{await ticket.Content.ReadAsStringAsync().ConfigureAwait(false)}"),
@@ -120,11 +120,12 @@ namespace Test
         public async Task AmendTicketSuccessfull()
         {
             var ticket = await Client.PostAsync(GetUri("ticket"), GetBody("[[1,1,1]]")).ConfigureAwait(false);
-            ticket.EnsureSuccessStatusCode();
+            Assert.IsTrue(ticket.IsSuccessStatusCode);
             var id = await ticket.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            await Client.PutAsync(GetUri($"ticket/{id}"),
+            var status = await Client.PutAsync(GetUri($"ticket/{id}"),
                 GetBody("[[1,2,1]]")).ConfigureAwait(false);
+            Assert.IsTrue(status.IsSuccessStatusCode);
 
             Assert.AreEqual($"{{\"id\":{id},\"lines\":[{{\"numbers\":[1,2,1]}}]}}",
                 await Client.GetStringAsync(GetUri($"ticket/{id}")).ConfigureAwait(false));
@@ -136,16 +137,33 @@ namespace Test
             GetBody(string.Empty)).ConfigureAwait(false)).StatusCode);
 
         [TestMethod]
-        public async Task StatusChecked()
+        public async Task StatusCheckSuccessfull()
         {
             var ticket = await Client.PostAsync(GetUri("ticket"), GetBody("[[1,1,1]]")).ConfigureAwait(false);
-            ticket.EnsureSuccessStatusCode();
+            Assert.IsTrue(ticket.IsSuccessStatusCode);
             var id = await ticket.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            await Client.PutAsync(GetUri($"ticket/{id}"),
-                GetBody("[[1,2,1]")).ConfigureAwait(false);
+            var status = await Client.PutAsync(GetUri($"status/{id}"), GetBody(string.Empty)).ConfigureAwait(false);
+            Assert.IsTrue(status.IsSuccessStatusCode);
 
-            Assert.AreEqual($"{{\"id\":{id},\"lines\":[{{\"numbers\":[1,2,1]}}]}}", await Client.GetStringAsync(GetUri($"ticket/{id}")).ConfigureAwait(false));
+            var ticketJson = $"{{\"id\":{id},\"result\":5}}";
+            Assert.AreEqual(ticketJson, await ticket.Content.ReadAsStringAsync().ConfigureAwait(false));
+            Assert.AreEqual(ticketJson, await Client.GetStringAsync(GetUri($"ticket/{id}")).ConfigureAwait(false));
+            Assert.AreEqual($"[{ticketJson}]", await Client.GetStringAsync(GetUri($"ticket")).ConfigureAwait(false));
+        }
+
+        [TestMethod]
+        public async Task CantAmendCheckTicket()
+        {
+            var ticket = await Client.PostAsync(GetUri("ticket"), GetBody("[[1,1,1]]")).ConfigureAwait(false);
+            Assert.IsTrue(ticket.IsSuccessStatusCode);
+            var id = await ticket.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            Assert.IsTrue((await Client.PutAsync(GetUri($"status/{id}"), GetBody(string.Empty)).
+                ConfigureAwait(false)).IsSuccessStatusCode);
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, (await Client.PutAsync(GetUri($"ticket/{id}"),
+                GetBody("[[1,2,1]]")).ConfigureAwait(false)).StatusCode);
         }
     }
 }
