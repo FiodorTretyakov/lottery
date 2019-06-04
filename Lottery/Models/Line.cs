@@ -67,7 +67,7 @@ namespace Lottery.Models
         {
         }
 
-        public Line(ICollection<int> nums)
+        public Line(IList<int> nums)
         {
             const int size = 3;
             int[] allowed = { 0, 1, 2 };

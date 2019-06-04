@@ -47,9 +47,9 @@ namespace Lottery.Models
         {
         }
 
-        public Ticket(ICollection<ICollection<int>> data) => Lines.AddRange(CreateLines(data));
+        public Ticket(IList<IList<int>> data) => Lines.AddRange(CreateLines(data));
 
-        public static List<Line> CreateLines(ICollection<ICollection<int>> data)
+        public static List<Line> CreateLines(IList<IList<int>> data)
         {
             var lines = data.Select(lineData => new Line(lineData)).ToList();
 
