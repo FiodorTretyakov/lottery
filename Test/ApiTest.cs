@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lottery;
 using Lottery.Models;
@@ -15,11 +16,11 @@ namespace Test
     [TestClass]
     public sealed class ApiTest : IDisposable
     {
-        private readonly CustomWebApplicationFactory<Startup> factory;
+        private readonly WebApplicationFactory<Startup> factory;
 
         public ApiTest()
         {
-            factory = new CustomWebApplicationFactory<Startup>();
+            factory = new WebApplicationFactory<Startup>();
         }
 
         private HttpClient Client => factory.CreateClient();
@@ -147,7 +148,6 @@ namespace Test
             Assert.IsTrue(status.IsSuccessStatusCode);
 
             var ticketJson = $"{{\"id\":{id},\"result\":5}}";
-            Assert.AreEqual(ticketJson, await ticket.Content.ReadAsStringAsync().ConfigureAwait(false));
             Assert.AreEqual(ticketJson, await Client.GetStringAsync(GetUri($"ticket/{id}")).ConfigureAwait(false));
             Assert.AreEqual($"[{ticketJson}]", await Client.GetStringAsync(GetUri($"ticket")).ConfigureAwait(false));
         }
