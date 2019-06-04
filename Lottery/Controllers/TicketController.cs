@@ -35,7 +35,7 @@ namespace Lottery.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post([FromBody] IList<IList<int>> data)
+        public async Task<ActionResult<int>> Post([FromBody] List<List<int>> data)
         {
             Ticket ticket;
             try
@@ -54,7 +54,7 @@ namespace Lottery.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] IList<IList<int>> value)
+        public async Task<ActionResult> Put(int id, [FromBody] List<List<int>> value)
         {
             var ticket = await context.Tickets.Include(t => t.Lines).FirstOrDefaultAsync(t => t.Id == id)
                 .ConfigureAwait(false);

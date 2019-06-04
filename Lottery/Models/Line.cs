@@ -19,11 +19,11 @@ namespace Lottery.Models
         public string NumbersData { get; private set; }
 
         [DataMember]
-        public IList<int> Numbers
+        public List<int> Numbers
         {
             get
             {
-                return JsonConvert.DeserializeObject<IList<int>>(NumbersData);
+                return JsonConvert.DeserializeObject<List<int>>(NumbersData);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Lottery.Models
         {
         }
 
-        public Line(IList<int> nums)
+        public Line(List<int> nums)
         {
             const int size = 3;
             int[] allowed = { 0, 1, 2 };
