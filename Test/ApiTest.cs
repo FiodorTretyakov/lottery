@@ -64,7 +64,7 @@ namespace Test
         public async Task CreateTicket()
         {
             var response = await factory.CreateClient().PostAsync("ticket",
-                new StringContent("",
+                new StringContent("\"[[1, 1, 1]]\"",
                 Encoding.UTF8, "application/json")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
