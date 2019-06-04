@@ -147,7 +147,7 @@ namespace Test
             var status = await Client.PutAsync(GetUri($"status/{id}"), GetBody(string.Empty)).ConfigureAwait(false);
             Assert.IsTrue(status.IsSuccessStatusCode);
 
-            var ticketJson = $"{{\"id\":{id},\"result\":5}}";
+            var ticketJson = $"{{\"id\":{id},\"lines\":[{{\"result\":5}}]}}";
             Assert.AreEqual(ticketJson, await Client.GetStringAsync(GetUri($"ticket/{id}")).ConfigureAwait(false));
             Assert.AreEqual($"[{ticketJson}]", await Client.GetStringAsync(GetUri($"ticket")).ConfigureAwait(false));
         }
