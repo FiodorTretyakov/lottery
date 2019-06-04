@@ -1,7 +1,6 @@
 obj
 bin
 .vscode/solution-explorer
-Migrations
 *.db
 *.db-journal
 coverage.json
