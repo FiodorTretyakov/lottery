@@ -41,7 +41,8 @@
                 "-p",
                 "${workspaceFolder}/Test/Test.csproj",
                 "test",
-                "/p:CollectCoverage=true"
+                "/p:CollectCoverage=true",
+                "/p:Exclude=\"[*]Lottery.Migrations.*\""
             ],
             "problemMatcher": "$tsc"
         }

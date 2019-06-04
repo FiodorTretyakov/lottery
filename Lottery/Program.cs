@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Lottery
 {
+    [ExcludeFromCodeCoverage]
     public static class Program
     {
         public static async Task Main(string[] args) =>
