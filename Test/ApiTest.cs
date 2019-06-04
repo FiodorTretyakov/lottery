@@ -29,7 +29,7 @@ namespace Test
         private StringContent GetBody(string value) =>
             new StringContent(value, Encoding.UTF8, "application/json");
 
-        private string DbConnection => new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().
+        private static string DbConnection => new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().
             GetConnectionString("LotteryDatabase");
 
         [TestCleanup]
@@ -74,22 +74,24 @@ namespace Test
         [TestMethod]
         public async Task CreateTicket()
         {
-            var ticket1 = await Client.PostAsync(GetUri("ticket"), GetBody("[[1, 1, 1]]")).ConfigureAwait(false);
+            var ticket1 = await Client.PostAsync(GetUri("ticket"), GetBody("[[1,1,1]]")).ConfigureAwait(false);
    
             ticket1.EnsureSuccessStatusCode();
             var id1 = await ticket1.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-            Assert.AreEqual(id1, await Client.GetStringAsync(GetUri($"ticket/{id1}")).ConfigureAwait(false));
+            var ticket1Json = $"{{\"id\":{id1},\"lines\":[{{\"numbers\":[1,1,1]}}]}}";
+            
+            Assert.AreEqual(ticket1Json, await Client.GetStringAsync(GetUri($"ticket/{id1}")).ConfigureAwait(false));
 
             var ticket2 = await Client.PostAsync(GetUri("ticket"),
-                GetBody("[[1, 0, 1], [0, 0, 0]]")).ConfigureAwait(false);
+                GetBody("[[1,0,1],[0,0,0]]")).ConfigureAwait(false);
 
             ticket2.EnsureSuccessStatusCode();
             var id2 = await ticket2.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var ticket2Json = $"{{\"id\":{id2},\"lines\":[{{\"numbers\":[1,0,1]}},{{\"numbers\":[0,0,0]}}]}}";
 
-            Assert.AreEqual(id2, await Client.GetStringAsync(GetUri($"ticket/{id2}")).ConfigureAwait(false));
+            Assert.AreEqual(ticket2Json, await Client.GetStringAsync(GetUri($"ticket/{id2}")).ConfigureAwait(false));
 
-            Assert.AreEqual("3", await Client.GetStringAsync(GetUri("ticket")).ConfigureAwait(false));
+            Assert.AreEqual($"[{ticket1Json},{ticket2Json}]", await Client.GetStringAsync(GetUri("ticket")).ConfigureAwait(false));
         }
     }
 }
