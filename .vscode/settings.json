@@ -10,7 +10,6 @@
     "files.exclude" : {
         "**/bin": true,
         "**/obj": true,
-        ".vscode/solution-explorer": true,
-        "**/coverage.json": true
+        ".vscode/solution-explorer": true
     }    
 }
