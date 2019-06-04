@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lottery;
 using Lottery.Models;
@@ -28,11 +29,14 @@ namespace Test
         private StringContent GetBody(string value) =>
             new StringContent(value, Encoding.UTF8, "application/json");
 
+        private string DbConnection => new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().
+            GetConnectionString("LotteryDatabase");
+
         [TestCleanup]
-        public void TearDown()
+        public async Task TearDown()
         {
             using (var context = new TicketContext(new DbContextOptionsBuilder<TicketContext>()
-                .UseInMemoryDatabase(CustomWebApplicationFactory<Startup>.TestDbName).Options))
+                .UseSqlite(DbConnection).Options))
             {
                 foreach (var ticket in context.Tickets)
                 {
@@ -43,7 +47,7 @@ namespace Test
                     context.Lines.Remove(line);
                 }
 
-                context.SaveChanges();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 
@@ -65,7 +69,7 @@ namespace Test
         [TestMethod]
         public async Task PutTicketNotFound() =>
             Assert.AreEqual(HttpStatusCode.NotFound, (await Client.PutAsync(GetUri("ticket/1"),
-            GetBody("[1, 2, 0]")).ConfigureAwait(false)).StatusCode);
+            GetBody("[[1, 2, 0]]")).ConfigureAwait(false)).StatusCode);
 
         [TestMethod]
         public async Task CreateTicket()
