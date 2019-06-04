@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -11,7 +12,7 @@ using Lottery.Models;
 namespace Test
 {
     [TestClass]
-    public class ApiTest : IDisposable
+    public sealed class ApiTest : IDisposable
     {
         private readonly CustomWebApplicationFactory<Startup> factory;
 
@@ -22,7 +23,10 @@ namespace Test
 
         private HttpClient Client => factory.CreateClient();
 
-        private Uri GetUri(string controller) => new Uri($"{factory.ClientOptions.BaseAddress}/{controller}");
+        private Uri GetUri(string controller) => new Uri($"{factory.ClientOptions.BaseAddress}{controller}");
+
+        private StringContent GetBody(string value) =>
+            new StringContent(value, Encoding.UTF8, "application/json");
 
         [TestCleanup]
         public void TearDown()
@@ -61,16 +65,27 @@ namespace Test
         [TestMethod]
         public async Task PutTicketNotFound() =>
             Assert.AreEqual(HttpStatusCode.NotFound, (await Client.PutAsync(GetUri("ticket/1"),
-            new StringContent("[[1, 2, 0]]", Encoding.UTF8, "application/json")).ConfigureAwait(false))
-            .StatusCode);
+            GetBody("[1, 2, 0]")).ConfigureAwait(false)).StatusCode);
 
         [TestMethod]
         public async Task CreateTicket()
         {
-            var response = await Client.PostAsync(GetUri("ticket"),
-                new StringContent("[[1, 1, 1]]", Encoding.UTF8, "application/json")).ConfigureAwait(false);
+            var ticket1 = await Client.PostAsync(GetUri("ticket"), GetBody("[[1, 1, 1]]")).ConfigureAwait(false);
+   
+            ticket1.EnsureSuccessStatusCode();
+            var id1 = await ticket1.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            response.EnsureSuccessStatusCode();
+            Assert.AreEqual(id1, await Client.GetStringAsync(GetUri($"ticket/{id1}")).ConfigureAwait(false));
+
+            var ticket2 = await Client.PostAsync(GetUri("ticket"),
+                GetBody("[[1, 0, 1], [0, 0, 0]]")).ConfigureAwait(false);
+
+            ticket2.EnsureSuccessStatusCode();
+            var id2 = await ticket2.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            Assert.AreEqual(id2, await Client.GetStringAsync(GetUri($"ticket/{id2}")).ConfigureAwait(false));
+
+            Assert.AreEqual("3", await Client.GetStringAsync(GetUri("ticket")).ConfigureAwait(false));
         }
     }
 }
