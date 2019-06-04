@@ -67,14 +67,14 @@ namespace Lottery.Models
         {
         }
 
-        public Line(int[] nums)
+        public Line(ICollection<int> nums)
         {
             const int size = 3;
             int[] allowed = { 0, 1, 2 };
 
-            if (nums.Length != size)
+            if (nums.Count != size)
             {
-                throw new ArgumentOutOfRangeException($"Line length should be {size}, but {nums.Length}.");
+                throw new ArgumentOutOfRangeException($"Line length should be {size}, but {nums.Count}.");
             }
 
             if (nums.Any(n => !allowed.Any(a => a == n)))

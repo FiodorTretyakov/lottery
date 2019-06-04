@@ -35,12 +35,12 @@ namespace Lottery.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post([FromBody] string value)
+        public async Task<ActionResult<int>> Post([FromBody] ICollection<ICollection<int>> data)
         {
             Ticket ticket;
             try
             {
-                ticket = new Ticket(value);
+                ticket = new Ticket(data);
             }
             catch (ArgumentOutOfRangeException e)
             {
@@ -54,7 +54,7 @@ namespace Lottery.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(int id, [FromBody] ICollection<ICollection<int>> value)
         {
             var ticket = await context.Tickets.Include(t => t.Lines).FirstOrDefaultAsync(t => t.Id == id)
                 .ConfigureAwait(false);
@@ -72,7 +72,7 @@ namespace Lottery.Controllers
             List<Line> lines;
             try
             {
-                lines = Ticket.DeserializeLines(value);
+                lines = Ticket.CreateLines(value);
             }
             catch (ArgumentOutOfRangeException e)
             {

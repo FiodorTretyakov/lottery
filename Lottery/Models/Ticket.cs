@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
 namespace Lottery.Models
 {
@@ -48,12 +47,11 @@ namespace Lottery.Models
         {
         }
 
-        public Ticket(string data) => Lines.AddRange(DeserializeLines(data));
+        public Ticket(ICollection<ICollection<int>> data) => Lines.AddRange(CreateLines(data));
 
-        public static List<Line> DeserializeLines(string data)
+        public static List<Line> CreateLines(ICollection<ICollection<int>> data)
         {
-            var lines = JsonConvert.DeserializeObject<ICollection<int[]>>(data).Select(lineData =>
-                new Line(lineData)).ToList();
+            var lines = data.Select(lineData => new Line(lineData)).ToList();
 
             if (lines.Count == 0)
             {
